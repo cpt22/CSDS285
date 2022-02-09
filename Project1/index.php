@@ -1,8 +1,8 @@
 <?php
 require_once('helpers.php');
-$body = "No Content.";
-if (isset($_GET) && isset($_GET['url_in'])) {
-    $url = $_GET['url_in'];
+$body = "URL must begin with http:// or https://";
+if (isset($_GET) && isset($_GET['url']) && preg_match("/https?\:\/\//", $_GET['url'])) {
+    $url = $_GET['url'];
     // Get contents of the URL
     $contents = file_get_contents($url);
 
@@ -28,12 +28,7 @@ if (isset($_GET) && isset($_GET['url_in'])) {
 
         // Generate the table
         $body = <<<END
-        <style>
-            table, th, td {
-                border: 1px solid black;
-            }
-        </style>
-        <table>
+        <table class="table">
             <tr>
                 <th>Tag</th>
                 <th>Count</th>
@@ -49,12 +44,7 @@ if (isset($_GET) && isset($_GET['url_in'])) {
         $t = preg_match_all("/(?<=\<img).*(?=\>)/", $contents, $matches);
         if (count(matches) > 0) {
             $body = <<<END
-            <style>
-                img {
-                    border: 1px solid black;
-                }
-            </style>
-            Some images may not appear due to cross-origin request blocking on remote web servers.<br><br>
+            Some images may not appear due to cross-origin request blocking on remote web servers.<br>
             END;
 
             $matches = $matches[0];
@@ -72,12 +62,14 @@ if (isset($_GET) && isset($_GET['url_in'])) {
                 if (!preg_match("/https?\:\/\//", $link)) {
                     $link = relativeToAbsolute($link, $url);
                 }
-                $body .= '<img src="' . $link . '" width="450" height="200"><br>';
+                $body .= '<img src="' . $link . '" class="img-fluid pb-3"><br>';
             }
         }
     }
 } else {
-    echo "There was an error";
+    if (!isset($_GET['url']) && (isset($_GET['resize_image']) || isset($_GET['tag_count']))) {
+        $body = "URL must be filled out";
+    }
 }
 ?>
 
@@ -85,17 +77,22 @@ if (isset($_GET) && isset($_GET['url_in'])) {
 <html>
 <head>
     <title>Project 1 - cpt15</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body>
-    <div style="border: 1px solid black; padding: 5px">
-        <form method="get" action="">
-            <label for="url_in">Enter a URL:</label>
-            <input id="url_in" type="text" name="url_in" <?php echo "value=\"{$url}\"" ?>>
-            <button type="submit" name="tag_count" id="url_submit">Count Tags</button>
-            <button type="submit" name="resize_image" id="url_submit">Resize Images</button>
-        </form>
+    <div class="container py-5">
+        <div class="pb-4">
+            <form method="get" action="">
+                <div class="input-group">
+                    <!--<label for="url_in">Enter a URL:</label>-->
+                    <input id="url_in" class="form-control" placeholder="Enter a URL" type="text" name="url" <?php echo "value=\"{$_GET['url']}\"" ?> required>
+                    <button type="submit" name="tag_count" class="btn btn-outline-primary">Count Tags</button>
+                    <button type="submit" name="resize_image" class="btn btn-outline-primary">Resize Images</button>
+                </div>
+            </form>
+        </div>
+        <?php echo $body; ?>
     </div>
-    <br><br>
-    <?php echo $body; ?>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
 </html>
