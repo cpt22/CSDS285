@@ -80,9 +80,9 @@ if (isset($_GET) && isset($_GET['url']) && preg_match("/https?\:\/\//", $_GET['u
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body>
-    <div class="container py-5">
-        <div class="pb-4">
-            <form method="get" action="">
+    <div class="container py-5 shadow">
+        <div class="pb-4 mx-3">
+            <form method="get" action="" class="pb-4">
                 <div class="input-group">
                     <!--<label for="url_in">Enter a URL:</label>-->
                     <input id="url_in" class="form-control" placeholder="Enter a URL" type="text" name="url" <?php echo "value=\"{$_GET['url']}\"" ?> required>
@@ -90,8 +90,8 @@ if (isset($_GET) && isset($_GET['url']) && preg_match("/https?\:\/\//", $_GET['u
                     <button type="submit" name="resize_image" class="btn btn-outline-primary">Resize Images</button>
                 </div>
             </form>
+            <?php echo $body; ?>
         </div>
-        <?php echo $body; ?>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
