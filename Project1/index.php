@@ -1,5 +1,5 @@
 <?php
-require_once('tags.php');
+require_once('helpers.php');
 $body = "No Content.";
 if (isset($_GET) && isset($_GET['url_in'])) {
     $url = $_GET['url_in'];
@@ -69,6 +69,9 @@ if (isset($_GET) && isset($_GET['url_in'])) {
             }
             // Add a resized image tag.
             foreach ($links as $link) {
+                if (!preg_match("/https?\:\/\//", $link)) {
+                    $link = relativeToAbsolute($link, $url);
+                }
                 $body .= '<img src="' . $link . '" width="450" height="200"><br>';
             }
         }
