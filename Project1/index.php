@@ -8,14 +8,14 @@ if (isset($_GET) && isset($_GET['url']) && preg_match("/https?\:\/\//", $_GET['u
 
     if (isset($_GET['tag_count'])) {
         // Extract all tags with regex
-        $matches = array();
+        $matches = [];
         $t = preg_match_all("/(?<=\<)[a-z]*/", $contents, $matches);
         $matches = array_filter($matches[0]);
         // Ensure no extraneous tags are there
         $matches = array_intersect($matches, $HTML_TAGS);
 
         // Count the number of each tag
-        $tags = array();
+        $tags = [];
         foreach ($matches as $match) {
             if (isset($tags[$match])) {
                 $tags[$match] += 1;
@@ -39,7 +39,7 @@ if (isset($_GET) && isset($_GET['url']) && preg_match("/https?\:\/\//", $_GET['u
         }
         $body .= "</table>";
     } else if (isset($_GET['resize_image'])) {
-        $matches = array();
+        $matches = [];
         // Extract all image tags
         $t = preg_match_all("/(?<=\<img).*(?=\>)/", $contents, $matches);
         if (count(matches) > 0) {
@@ -48,10 +48,10 @@ if (isset($_GET) && isset($_GET['url']) && preg_match("/https?\:\/\//", $_GET['u
             END;
 
             $matches = $matches[0];
-            $links = array();
+            $links = [];
             // Loop through all the matched tags and extract the url from the tag.
             foreach ($matches as $match) {
-                $vals = array();
+                $vals = [];
                 preg_match("/src=\"([^\"]+)\"/", $match, $vals);
                 if (count($vals) > 0) {
                     array_push($links, $vals[1]);
